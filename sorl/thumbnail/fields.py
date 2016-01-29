@@ -7,6 +7,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from sorl.thumbnail import default
 
+try:
+    from sorl.thumbnail.admin.current import AdminImageWidget  # For django 1.7+
+except ImportError, e:
+    pass  #Old versions of Django
 
 __all__ = ('ImageField', 'ImageFormField')
 
@@ -47,7 +51,12 @@ class ImageField(models.ImageField):
         return (cls_name, args, kwargs)
 
 
-class ImageFormField(forms.FileField):
+class ImageFormField(forms.fields.FileField):
+    
+    def __init__(self, *args, **kwargs):
+        kwargs.update({'widget': AdminImageWidget()})
+        super(ImageFormField, self).__init__(*args, **kwargs)
+       
     default_error_messages = {
         'invalid_image': _("Upload a valid image. The file you uploaded was "
                            "either not an image or a corrupted image."),

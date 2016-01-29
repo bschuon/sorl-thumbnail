@@ -3,7 +3,7 @@ import logging
 
 from django import forms
 from django.utils.safestring import mark_safe
-from sorl.thumbnail.fields import ImageField
+#from sorl.thumbnail.fields import ImageField
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 
@@ -16,11 +16,12 @@ class AdminImageWidget(forms.ClearableFileInput):
     image as well as a link to the current one if it hase one.
     """
 
-    template_with_initial = (
-        '%(clear_template)s <br>'
-        '<label>%(input_text)s: %(input)s</label>'
-    )
-    template_with_clear = '<label>%(clear_checkbox_label)s: %(clear)s</label>'
+    template_with_initial = '%(clear_template)s<br />%(input_text)s: %(input)s'
+    template_with_clear = ('%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">'
+                           '%(clear_checkbox_label)s</label>')
+
+    class Media:
+        pass
 
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
@@ -49,6 +50,7 @@ class AdminImageWidget(forms.ClearableFileInput):
         return mark_safe(output)
 
 
+'''
 class AdminImageMixin(object):
     """
     This is a mix-in for InlineModelAdmin subclasses to make ``ImageField``
@@ -60,3 +62,4 @@ class AdminImageMixin(object):
             return db_field.formfield(widget=AdminImageWidget)
         sup = super(AdminImageMixin, self)
         return sup.formfield_for_dbfield(db_field, **kwargs)
+'''
